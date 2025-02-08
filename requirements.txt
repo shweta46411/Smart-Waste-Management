@@ -9,3 +9,4 @@ seaborn
 folium
 streamlit_folium
 google-cloud-vision
+geopy
