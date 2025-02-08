@@ -10,7 +10,6 @@ if RUNNING_IN_STREAMLIT:
     OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
     GOOGLE_MAPS_API_KEY = st.secrets["GOOGLE_MAPS_API_KEY"]
     OPENWEATHER_API_KEY = st.secrets["OPENWEATHER_API_KEY"]
-    IWASTE_API_KEY = st.secrets["IWASTE_API_KEY"]
     print("🔹 Using Streamlit Secrets for API keys (Cloud Mode)")
 else:
     # ✅ Load from .env file locally
@@ -18,7 +17,6 @@ else:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
     OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
-    IWASTE_API_KEY = os.getenv("IWASTE_API_KEY")
     print("🔹 Using .env file for API keys (Local Mode)")
 
 # Load environment variables

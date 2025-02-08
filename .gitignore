@@ -5,3 +5,4 @@ __pycache__/
 # Ignore local environment files
 .env
 gcloud_key.json
+gcloud_key_base64

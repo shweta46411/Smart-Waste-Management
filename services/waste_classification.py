@@ -18,35 +18,33 @@ openai.api_key = OPENAI_API_KEY
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("gcloud_key.json")
 
 
-
-
-
-# ✅ Load .env file (for local environment)
-load_dotenv()
-
-# ✅ Check if running in Streamlit Cloud
 RUNNING_IN_STREAMLIT = "STREAMLIT_SERVER_RUN_ONCE" in os.environ
 
 if RUNNING_IN_STREAMLIT:
-    # ✅ Load from Streamlit Secrets
-    if "GOOGLE_CLOUD_KEY" in st.secrets:
-        google_cloud_json_str = st.secrets["GOOGLE_CLOUD_KEY"]
+    if "GOOGLE_CLOUD_KEY" in st.secrets["google_cloud"]:
+        google_cloud_json_str = st.secrets["google_cloud"]["GOOGLE_CLOUD_KEY"]
         google_cloud_json = json.loads(base64.b64decode(google_cloud_json_str))
 
-        # Write to a temporary JSON file
+        # ✅ Write to a temporary JSON file
         with open("gcloud_key.json", "w") as f:
             json.dump(google_cloud_json, f)
 
-    print("🔹 Running on Streamlit Cloud - Using Secrets")
-else:
-    # ✅ Use local gcloud_key.json
-    google_credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcloud_key.json"
+        print("✅ Google Cloud credentials loaded from Streamlit Secrets (Cloud Mode)")
 
-    if google_credentials_path and os.path.exists(google_credentials_path):
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_credentials_path
-        print(f"🔹 Running Locally - Using: {google_credentials_path}")
     else:
-        raise FileNotFoundError("⚠️ Google Cloud credentials not found. Check .env file!")
+        raise FileNotFoundError("❌ Google Cloud credentials not found in Streamlit Secrets!")
+
+else:
+    # ✅ Load from .env for local development
+    load_dotenv()
+    GOOGLE_CLOUD_CREDENTIALS_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+    if GOOGLE_CLOUD_CREDENTIALS_PATH and os.path.exists(GOOGLE_CLOUD_CREDENTIALS_PATH):
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_CLOUD_CREDENTIALS_PATH
+        print(f"✅ Running Locally - Using: {GOOGLE_CLOUD_CREDENTIALS_PATH}")
+    else:
+        raise FileNotFoundError("❌ Google Cloud credentials not found! Check .env file.")
 
 
 # ✅ Fetch Waste Categories from I-WASTE API
