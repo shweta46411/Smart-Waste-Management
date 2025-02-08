@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 RUNNING_IN_STREAMLIT = "STREAMLIT_SERVER_RUN_ONCE" in os.environ
 
 # Securely fetch API keys
+RUNNING_IN_STREAMLIT = True 
 if RUNNING_IN_STREAMLIT:
     # ✅ Load from Streamlit Secrets in the cloud
     OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]

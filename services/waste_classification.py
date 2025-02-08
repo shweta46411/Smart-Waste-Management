@@ -32,8 +32,8 @@ import streamlit as st
 import base64
 
 # ✅ Force detect if running in Streamlit Cloud
-RUNNING_IN_STREAMLIT = "STREAMLIT_SERVER_RUN_ONCE" in os.environ or "STREAMLIT_CLOUD" in os.environ
-
+#RUNNING_IN_STREAMLIT = "STREAMLIT_SERVER_RUN_ONCE" in os.environ or "STREAMLIT_CLOUD" in os.environ
+RUNNING_IN_STREAMLIT = True 
 if RUNNING_IN_STREAMLIT:
     print("🚀 Running in Streamlit Cloud Mode!")
     
