@@ -18,26 +18,41 @@ openai.api_key = OPENAI_API_KEY
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("gcloud_key.json")
 
 
-RUNNING_IN_STREAMLIT = "STREAMLIT_SERVER_RUN_ONCE" in os.environ
+
+
+import os
+import json
+import streamlit as st
+import base64
+
+# ✅ FORCE DETECTION OF STREAMLIT CLOUD
+RUNNING_IN_STREAMLIT = "STREAMLIT_SERVER_RUN_ONCE" in os.environ or "STREAMLIT_CLOUD" in os.environ
 
 if RUNNING_IN_STREAMLIT:
-    if "GOOGLE_CLOUD_KEY" in st.secrets["google_cloud"]:
+    print("🚀 Running in Streamlit Cloud Mode!")
+    
+    if "google_cloud" in st.secrets and "GOOGLE_CLOUD_KEY" in st.secrets["google_cloud"]:
         google_cloud_json_str = st.secrets["google_cloud"]["GOOGLE_CLOUD_KEY"]
         google_cloud_json = json.loads(base64.b64decode(google_cloud_json_str))
 
         # ✅ Write to a temporary JSON file
-        with open("gcloud_key.json", "w") as f:
+        temp_gcloud_path = "/tmp/gcloud_key.json"
+        with open(temp_gcloud_path, "w") as f:
             json.dump(google_cloud_json, f)
 
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcloud_key.json"
-        print("✅ Google Cloud credentials loaded from Streamlit Secrets (Cloud Mode)")
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = temp_gcloud_path
+        print(f"✅ Google Cloud credentials successfully written to {temp_gcloud_path}")
 
     else:
-        raise FileNotFoundError("❌ Google Cloud credentials not found in Streamlit Secrets!")
+        raise FileNotFoundError("❌ Google Cloud key not found in Streamlit Secrets!")
 
 else:
+    print("💻 Running in Local Mode - Loading from .env file")
+    
     # ✅ Load from .env for local development
+    from dotenv import load_dotenv
     load_dotenv()
+    
     GOOGLE_CLOUD_CREDENTIALS_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
     if GOOGLE_CLOUD_CREDENTIALS_PATH and os.path.exists(GOOGLE_CLOUD_CREDENTIALS_PATH):
@@ -45,6 +60,7 @@ else:
         print(f"✅ Running Locally - Using: {GOOGLE_CLOUD_CREDENTIALS_PATH}")
     else:
         raise FileNotFoundError("❌ Google Cloud credentials not found! Check .env file.")
+
 
 
 # ✅ Fetch Waste Categories from I-WASTE API
