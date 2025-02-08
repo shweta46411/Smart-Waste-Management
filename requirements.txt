@@ -1,0 +1,8 @@
+streamlit
+openai
+googlemaps
+requests
+python-dotenv
+pandas
+matplotlib
+seaborn
