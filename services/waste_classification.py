@@ -26,6 +26,12 @@ import streamlit as st
 import base64
 
 # ✅ FORCE DETECTION OF STREAMLIT CLOUD
+import os
+import json
+import streamlit as st
+import base64
+
+# ✅ Force detect if running in Streamlit Cloud
 RUNNING_IN_STREAMLIT = "STREAMLIT_SERVER_RUN_ONCE" in os.environ or "STREAMLIT_CLOUD" in os.environ
 
 if RUNNING_IN_STREAMLIT:
@@ -60,7 +66,6 @@ else:
         print(f"✅ Running Locally - Using: {GOOGLE_CLOUD_CREDENTIALS_PATH}")
     else:
         raise FileNotFoundError("❌ Google Cloud credentials not found! Check .env file.")
-
 
 
 # ✅ Fetch Waste Categories from I-WASTE API
